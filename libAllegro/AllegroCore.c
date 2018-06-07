@@ -1,8 +1,7 @@
 #include "AllegroCore.h"
 
 
-bool coreInit()
-{
+bool coreInit(){
     //modules and add-ons initialization
 	if (!al_init())
     {
@@ -171,15 +170,18 @@ int digitemenu(){
         al_init_timeout(&timeout, 0.05);
  
         int tem_eventos = al_wait_for_event_until(eventsQueue, &evento, &timeout);
- 
+        
         if (tem_eventos && evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
             allegroEnd();
             printf("Janela fechada\n");
             return 0;
         }
-        while (evento.mouse.x >=(larg/2)-40 && evento.mouse.x <= (larg/2)-20 && evento.mouse.y >= 220 && evento.mouse.y >= 240){             
+        printf("%i %i\n", evento.mouse.x, evento.mouse.y);
+        /*
+        while (evento.mouse.x >= 410 && evento.mouse.y >= 215 && evento.mouse.x <= 625 && evento.mouse.y >= 243){             
             al_draw_text(start, al_map_rgb(255, 255, 0), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
             al_flip_display();
+            /*
             if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){   
                 printf("\n     START GAME      \n");
                 return 1;
@@ -188,6 +190,8 @@ int digitemenu(){
         }
         al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
         al_flip_display();
+        */
+        /*
         while (evento.mouse.x >=(larg/2)-40 && evento.mouse.x <= (larg/2)-20 && evento.mouse.y >= 420 && evento.mouse.y >= 440){
             al_draw_text(start, al_map_rgb(255, 255, 0), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
             al_flip_display();
@@ -206,6 +210,6 @@ int digitemenu(){
                 printf("     QUIT GAME      \n");
                 return 3;   
             }
-        }    
+        }  */  
     }    
 }

@@ -16,7 +16,10 @@ void sort_posi(int *vetor){
         vetor[a]=rand()%tam;
     }
 }
-
+void bubble_sort(person rod_dados[max],int ids[max]){
+    /*função que pega os dados ordenados por ordem crescente de ids e os 
+    ordenam baseados na ordem crescente de tempo*/
+}
 int main(){
     serverInit(max);
     //exibe configurações de rede para facilitar a conexão
@@ -83,7 +86,9 @@ int main(){
     al_rest(5);
 
     //laço de uma partida
-    int partida = true;
+    bool partida = true;
+    person rod_dados[max];
+    int ids[max];
     while(partida == true){
         printf("entrou\n");
         rejectConnection();
@@ -93,13 +98,16 @@ int main(){
 
         //recebe as modificações do jogador
         for(ind_id=0; ind_id<ind_jog;ind_id++){
-            recvMsgFromClient(&jogadores[ind_id], players[ind_id], WAIT_FOR_IT);
+            recvMsgFromClient(&rod_dados[ind_id], players[ind_id], WAIT_FOR_IT);
+            ids[ind_id] = ind_id;
         }
         for(ind_id=0;ind_id<num_jogadores;ind_id++){
             printf("%i - %c - %i - %i - %i\n",jogadores[ind_id].life,jogadores[ind_id].hori,jogadores[ind_id].ataque,jogadores[ind_id].x, jogadores[ind_id].y);
             
         }
-       
+        /*com os dados da rodada e com quais ids eles remetem será dado um bubble sort
+        para organizar e processar as atualização no servidor pela ordem cronologica*/
+        //bubble_sort(rod_dados,ids);
         FPSLimit();
         broadcast(jogadores, sizeof(person)*ind_jog);
     }

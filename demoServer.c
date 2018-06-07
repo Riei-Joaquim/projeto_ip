@@ -2,14 +2,13 @@
 #include "libAllegro/AllegroCore.h"
 
 #define max 6
-#define tam 5600
+#define tam 2240
 typedef struct{
     int life;
     int x;
     int y;
     char hori;
     char ataque;
-    double acao;
 }person;
 void sort_posi(int *vetor){
     int a;
@@ -20,6 +19,104 @@ void sort_posi(int *vetor){
 void bubble_sort(person rod_dados[max],int ids[max]){
     /*função que pega os dados ordenados por ordem crescente de ids e os 
     ordenam baseados na ordem crescente de tempo*/
+}
+void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
+    int ind, distx, disty;
+    if(jogadores[id_ana].hori =='w'){
+        for(ind=0;ind<num_jogadores;ind++){
+           if(ind!=id_ana){
+               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               disty = (jogadores[id_ana].y -jogadores[ind].y);
+               if(((distx >-32)&&(distx<32))&&(disty<64)){
+                   jogadores[ind].life--;
+                   jogadores[ind].y -= 64;
+               }
+           } 
+        }
+    }else if(jogadores[id_ana].hori =='s'){
+        for(ind=0;ind<num_jogadores;ind++){
+           if(ind!=id_ana){
+               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               disty = (jogadores[id_ana].y -jogadores[ind].y);
+               if(((distx >-32)&&(distx<32))&&(disty> -64)){
+                   jogadores[ind].life--;
+                   jogadores[ind].y += 64;
+               }
+           } 
+        }
+    }else if(jogadores[id_ana].hori =='d'){
+        for(ind=0;ind<num_jogadores;ind++){
+           if(ind!=id_ana){
+               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               disty = (jogadores[id_ana].y -jogadores[ind].y);
+               if(((disty >-32)&&(disty<32))&&(distx> 64)){
+                   jogadores[ind].life--;
+                   jogadores[ind].x +=64;
+               }
+           } 
+        }
+    }else{
+        for(ind=0;ind<num_jogadores;ind++){
+           if(ind!=id_ana){
+               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               disty = (jogadores[id_ana].y -jogadores[ind].y);
+               if(((disty >-32)&&(disty<32))&&(distx>-64)){
+                   jogadores[ind].life--;
+                   jogadores[ind].x -=64;
+               }
+           } 
+        }
+    }
+}
+
+void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
+    int ind, distx, disty;
+    if(jogadores[id_ana].hori =='w'){
+        for(ind=0;ind<num_jogadores;ind++){
+           if(ind!=id_ana){
+               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               disty = (jogadores[id_ana].y -jogadores[ind].y);
+               if((distx >= 32)&&(disty>-32)){
+                   jogadores[ind].life--;
+                   jogadores[ind].y -= 32;
+                   jogadores[ind].x -= 32;
+               }
+           } 
+        }
+    }else if(jogadores[id_ana].hori =='s'){
+        for(ind=0;ind<num_jogadores;ind++){
+           if(ind!=id_ana){
+               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               disty = (jogadores[id_ana].y -jogadores[ind].y);
+               if(((distx >-32)&&(distx<32))&&(disty> -64)){
+                   jogadores[ind].life--;
+                   jogadores[ind].y += 64;
+               }
+           } 
+        }
+    }else if(jogadores[id_ana].hori =='d'){
+        for(ind=0;ind<num_jogadores;ind++){
+           if(ind!=id_ana){
+               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               disty = (jogadores[id_ana].y -jogadores[ind].y);
+               if(((disty >-32)&&(disty<32))&&(distx> 64)){
+                   jogadores[ind].life--;
+                   jogadores[ind].x +=64;
+               }
+           } 
+        }
+    }else{
+        for(ind=0;ind<num_jogadores;ind++){
+           if(ind!=id_ana){
+               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               disty = (jogadores[id_ana].y -jogadores[ind].y);
+               if(((disty >-32)&&(disty<32))&&(distx>-64)){
+                   jogadores[ind].life--;
+                   jogadores[ind].x -=64;
+               }
+           } 
+        }
+    }
 }
 int main(){
     serverInit(max);
@@ -88,7 +185,6 @@ int main(){
 
     //laço de uma partida
     bool partida = true;
-    person rod_dados[max];
     int ids[max];
     while(partida == true){
         printf("entrou\n");
@@ -99,18 +195,38 @@ int main(){
 
         //recebe as modificações do jogador
         for(ind_id=0; ind_id<ind_jog;ind_id++){
-            recvMsgFromClient(&rod_dados[ind_id], players[ind_id], WAIT_FOR_IT);
+            recvMsgFromClient(&jogadores[ind_id], players[ind_id], WAIT_FOR_IT);
             ids[ind_id] = ind_id;
         }
+
+        //verificação de hits
         for(ind_id=0;ind_id<num_jogadores;ind_id++){
-            printf("%i - %c - %i - %i - %i - %lf \n",jogadores[ind_id].life,jogadores[ind_id].hori,jogadores[ind_id].ataque,jogadores[ind_id].x, jogadores[ind_id].y,rod_dados[ind_id].acao);
+            if(jogadores[ind_id].ataque == '1'){
+                veri_hits_lanca(jogadores,ind_id,num_jogadores);
+            }else if(jogadores[ind_id].ataque =='2'){
+                veri_hits_esp(jogadores,ind_id,num_jogadores);
+            }
+        }
+        
+        broadcast(jogadores, sizeof(person)*ind_jog);
+
+        // verificação de mortes
+        for(ind_id=0;ind_id<num_jogadores;ind_id++){
+            if(jogadores[ind_id].life == 0){
+                disconnectClient(players[ind_id]);
+            }
+        }
+
+        for(ind_id=0;ind_id<num_jogadores;ind_id++){
+            printf("%i - %c - %i - %i - %i \n",jogadores[ind_id].life,jogadores[ind_id].hori,jogadores[ind_id].ataque,jogadores[ind_id].x, jogadores[ind_id].y);
             
         }
         /*com os dados da rodada e com quais ids eles remetem será dado um bubble sort
         para organizar e processar as atualização no servidor pela ordem cronologica*/
         //bubble_sort(rod_dados,ids);
         FPSLimit();
-        broadcast(jogadores, sizeof(person)*ind_jog);
+        
+        
     }
     serverReset();
     return 0;

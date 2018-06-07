@@ -2,17 +2,14 @@
 #include "libAllegro/AllegroCore.h"
 #include "libSocket/server.h"
 #define max 6
-#define tam 2000
+#define tam 2240
 typedef struct{
     int life;
     int x;
     int y;
     char hori;
     char ataque;
-    double acao;
 }person;
-
-
 void att_mapa(char mapa[tam][tam],person jogadores[max], int quant_jogadores){
     int i,j, ind;
     bool tem_jog;
@@ -64,9 +61,9 @@ void att_camera(char mapa[tam][tam], person jogador, int *lin_ini ,int *col_ini)
         }
     }
 }
-void extrai_janela(char mapa[tam][tam],char janela[HEIGHT][WIDTH], int ini_lin, int ini_col){
+void extrai_janela(char mapa[tam][tam],char janela[alt][larg], int ini_lin, int ini_col){
     int im,jm, iw = 0,jw = 0;
-    for(im=ini_lin; im<(ini_lin +HEIGHT);im++){
+    for(im=ini_lin; im<(ini_lin +larg);im++){
         for(jm = ini_col; jm<(ini_col + WIDTH);jm){
             janela[iw][jw] = mapa[im][jm];
             iw++;
@@ -74,9 +71,50 @@ void extrai_janela(char mapa[tam][tam],char janela[HEIGHT][WIDTH], int ini_lin, 
         }
     }
 }
+bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
+    int ind;
+    if(mov == 'w'){
+        for(ind=0;ind<num_jogadores;ind++){
+            if(ind!=meu_id){
+                if((jogadores[ind].x == jogadores[meu_id].x)&&(jogadores[ind].y == (jogadores[meu_id].y-1))){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }else if(mov == 's'){
+        for(ind=0;ind<num_jogadores;ind++){
+            if(ind!=meu_id){
+                if((jogadores[ind].x == jogadores[meu_id].x)&&(jogadores[ind].y == (jogadores[meu_id].y+1))){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }else if(mov == 'a'){
+        for(ind=0;ind<num_jogadores;ind++){
+            if(ind!=meu_id){
+                if((jogadores[ind].x == (jogadores[meu_id].x-1))&&(jogadores[ind].y == (jogadores[meu_id].y))){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }else if(mov == 'd'){
+        for(ind=0;ind<num_jogadores;ind++){
+            if(ind!=meu_id){
+                if((jogadores[ind].x == (jogadores[meu_id].x+1))&&(jogadores[ind].y == (jogadores[meu_id].y))){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
 int main(){
     int x_close=9;
     coreInit();
+    /*
     windowInit(larg, alt, "PUNCH KILL");
     inputInit();
     fontInit();
@@ -99,7 +137,7 @@ int main(){
     }
     else if(x_close==3){
         return 0;
-    }
+    }*/
     //conexão com o servidor
     char ip[12];
     int ret_conec, id_local;
@@ -143,7 +181,7 @@ int main(){
     }
 
     //variaveis para a janela de exibição
-    char janela_p[HEIGHT][WIDTH];
+    //char janela_p[alt][larg];
     int ini_lin, ini_col;
 
     //setagem inicial do inicio da janela nas matrizes
@@ -154,36 +192,29 @@ int main(){
     // laço da partida
     bool vivo = true;
     char caracter;
-    //double*p1,*p2;
     while(vivo ==true){
+
         startTimer();
         //coleta a entrada do cliente para a rodada
         caracter = getch();
-        if(caracter !=NO_KEY_PRESSED){
-            /*nesse caso eu pego o tempo para processar/atualizar as
-            posições no servidor por ordem cronologica*/
-            //p1 = &jogadores[id_local].acao;
-            //p2 = al_get_time;
-            //*p1 = *p2;
-        }
         if(caracter == 'W'||caracter == 'w'){
-            if(jogadores[id_local].x>0){
-                jogadores[id_local].x--;
+            if((jogadores[id_local].y>0)&&(mov_valid('w',jogadores,num_jogadores,id_local))){
+                jogadores[id_local].y--;
                 jogadores[id_local].hori = 'w';
             }
         }else if(caracter == 'S'||caracter == 's'){
-            if(jogadores[id_local].x<(tam-1)){
-                jogadores[id_local].x++;
+            if((jogadores[id_local].y<(tam-32))&&(mov_valid('s',jogadores,num_jogadores,id_local))){
+                jogadores[id_local].y++;
                 jogadores[id_local].hori = 's';
             }
         }else if(caracter == 'A'||caracter == 'a'){
-            if(jogadores[id_local].y>0){
-                jogadores[id_local].y--;
+            if((jogadores[id_local].x>0)&&(mov_valid('a',jogadores,num_jogadores,id_local))){
+                jogadores[id_local].x--;
                 jogadores[id_local].hori = 'a';
             }
         }else if(caracter == 'D'||caracter == 'd'){
-            if(jogadores[id_local].y<(tam-1)){
-                jogadores[id_local].y++;
+            if((jogadores[id_local].x<(tam-32))&&(mov_valid('d',jogadores,num_jogadores,id_local))){
+                jogadores[id_local].x++;
                 jogadores[id_local].hori = 'd';
             }
         }
@@ -200,17 +231,18 @@ int main(){
         // atualizando a posição da camera
         att_camera(mapa, jogadores[id_local],&ini_lin,&ini_col);
 
-        //pegando do mapa estatico a parte que sera exibida
-        //extrai_janela(mapa_camp,janela_camp, ini_lin,ini_col);
-
         // pegando do mapa de jogadores todo a parte que sera exibida pela na janela
-        extrai_janela(mapa, janela_p,ini_lin, ini_col);
+        //extrai_janela(mapa, janela_p,ini_lin, ini_col);
 
         //codigo da allegro para exibir a tela atual...
 
         //envia minhas alterações para o server e recebo as alterações de todos os jogadores
         sendMsgToServer(&jogadores[id_local], sizeof(person));
         recvMsgFromServer(jogadores,WAIT_FOR_IT);
+        if(jogadores[id_local].life == 0){
+            printf("YOU-DIED\n");
+            vivo = false;
+        }
         printf("coordenadas(%i,%i)\n",jogadores[id_local].x, jogadores[id_local].y);
         
         //atualiza a matriz com as novas posições recebidas do server

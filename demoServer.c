@@ -9,6 +9,7 @@ typedef struct{
     int y;
     char hori;
     char ataque;
+    double acao;
 }person;
 void sort_posi(int *vetor){
     int a;
@@ -102,7 +103,7 @@ int main(){
             ids[ind_id] = ind_id;
         }
         for(ind_id=0;ind_id<num_jogadores;ind_id++){
-            printf("%i - %c - %i - %i - %i\n",jogadores[ind_id].life,jogadores[ind_id].hori,jogadores[ind_id].ataque,jogadores[ind_id].x, jogadores[ind_id].y);
+            printf("%i - %c - %i - %i - %i - %lf \n",jogadores[ind_id].life,jogadores[ind_id].hori,jogadores[ind_id].ataque,jogadores[ind_id].x, jogadores[ind_id].y,rod_dados[ind_id].acao);
             
         }
         /*com os dados da rodada e com quais ids eles remetem será dado um bubble sort

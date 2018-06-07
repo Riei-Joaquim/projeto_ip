@@ -154,7 +154,7 @@ int main(){
     // laço da partida
     bool vivo = true;
     char caracter;
-    double*p1,*p2;
+    //double*p1,*p2;
     while(vivo ==true){
         startTimer();
         //coleta a entrada do cliente para a rodada
@@ -162,9 +162,9 @@ int main(){
         if(caracter !=NO_KEY_PRESSED){
             /*nesse caso eu pego o tempo para processar/atualizar as
             posições no servidor por ordem cronologica*/
-            p1 = &jogadores[id_local].acao;
-            p2 = al_get_time;
-            *p1 = *p2;
+            //p1 = &jogadores[id_local].acao;
+            //p2 = al_get_time;
+            //*p1 = *p2;
         }
         if(caracter == 'W'||caracter == 'w'){
             if(jogadores[id_local].x>0){

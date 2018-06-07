@@ -13,26 +13,18 @@
 #include <string.h>
 
 #define FPS 60
+#define WIDTH 1120
+#define HEIGHT 720
+#define larg 1120
+#define alt 720
 
 double startingTime;
-
-
 ALLEGRO_DISPLAY *main_window;
 ALLEGRO_EVENT_QUEUE *eventsQueue;
-
 ALLEGRO_FONT *ubuntu;
 ALLEGRO_FONT *start;
-
 ALLEGRO_BITMAP *objects;
 ALLEGRO_BITMAP *hscs;
-
-
-typedef struct DADOS
-{
-    char mensagem[100];
-    int valor;
-}DADOS;
-
 
 //Funções Centrais da Allegro
 bool coreInit();
@@ -48,5 +40,4 @@ void FPSLimit();
 
 //Função de Carregamento de Gráficos
 bool loadGraphics();
-
 #endif

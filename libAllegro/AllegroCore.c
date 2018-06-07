@@ -53,7 +53,7 @@ bool windowInit(int W, int H, char title[])
     main_window = al_create_display(W, H);
     if (!main_window)
     {
-        fprintf(stderr, "Falha ao criar janela.\n");
+        fprintf,(stderr, "Falha ao criar janela.\n");
         return false;
     }
     al_set_window_title(main_window, title);
@@ -104,14 +104,14 @@ bool inputInit()
 bool fontInit()
 {
     /*------------------------------FONTE--------------------------------*/
-    start = al_load_font("Resources/Fonts/pressStart.ttf", 16, 0);
+    start = al_load_font("Resources/Fonts/pressStart.ttf", 20, 0);
     if (!start)
     {
         fprintf(stderr, "Falha ao carregar \"pressStart.ttf\".\n");
         return false;
     }
 
-    ubuntu = al_load_font("Resources/Fonts/Ubuntu-R.ttf", 32, 0);
+    ubuntu = al_load_font("Resources/Fonts/pressStart.ttf", 50, 0);
     if (!ubuntu)
     {
         fprintf(stderr, "Falha ao carregar \"Ubuntu-R.ttf\".\n");
@@ -150,7 +150,7 @@ void FPSLimit()
 
 bool loadGraphics()
 {
-    hscs = al_load_bitmap("Resources/Etc/World.png");
+    hscs = al_load_bitmap("Resources/Etc/fundo.png");
     if (!hscs){
         fprintf(stderr, "Falha carregando world.png\n");
         return false;
@@ -163,4 +163,49 @@ bool loadGraphics()
     }
 
     return true;
+}
+int digitemenu(){
+    while (1){
+        ALLEGRO_EVENT evento;
+        ALLEGRO_TIMEOUT timeout;
+        al_init_timeout(&timeout, 0.05);
+ 
+        int tem_eventos = al_wait_for_event_until(eventsQueue, &evento, &timeout);
+ 
+        if (tem_eventos && evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
+            allegroEnd();
+            printf("Janela fechada\n");
+            return 0;
+        }
+        while (evento.mouse.x >=(larg/2)-40 && evento.mouse.x <= (larg/2)-20 && evento.mouse.y >= 220 && evento.mouse.y >= 240){             
+            al_draw_text(start, al_map_rgb(255, 255, 0), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
+            al_flip_display();
+            if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){   
+                printf("\n     START GAME      \n");
+                return 1;
+            }  
+            
+        }
+        al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
+        al_flip_display();
+        while (evento.mouse.x >=(larg/2)-40 && evento.mouse.x <= (larg/2)-20 && evento.mouse.y >= 420 && evento.mouse.y >= 440){
+            al_draw_text(start, al_map_rgb(255, 255, 0), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
+            al_flip_display();
+            if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){
+                printf("\n     CREDITS      \n");
+                return 2;
+            }   
+        }
+        al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
+        al_flip_display();
+        while (evento.mouse.x >=(larg/2)-40 && evento.mouse.x <= (larg/2)-20 && evento.mouse.y >= 620 && evento.mouse.y >= 640){
+            al_draw_text(start, al_map_rgb(255, 255, 0), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
+            al_flip_display();
+            if (evento.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){
+                allegroEnd();
+                printf("     QUIT GAME      \n");
+                return 3;   
+            }
+        }    
+    }    
 }

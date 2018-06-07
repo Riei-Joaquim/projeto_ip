@@ -1,160 +1,218 @@
 #include "libSocket/client.h"
 #include "libAllegro/AllegroCore.h"
+#include "libSocket/server.h"
+#define max 6
+#define tam 2000
+typedef struct{
+    int life;
+    int x;
+    int y;
+    char hori;
+    char ataque;
+}person;
 
-#define LARGURA 640
-#define ALTURA 480
 
-int main(int argc, char const *argv[])
-{
-    //A primeira coisa a ser feita é inicializar os módulos centrais. Caso algum deles falhe, o programa já para por aí.
-    if (!coreInit())
-        return -1;
-
-    //Agora vamos criar a nossa janela. Largura e Altura em pixels, o título é uma string.
-    if (!windowInit(LARGURA, ALTURA, "TITULO DA JANELA :3"))
-        return -1;
-
-    //Agora inicializamos nosso teclado e mouse, para que a janela responda às entradas deles
-    if (!inputInit())
-        return -1;
-
-    //Agora inicializamos nossas fontes
-    if(!fontInit())
-        return -1;
-
-    //E por fim todas as imagens que vamos utilizar no programa.
-    if(!loadGraphics())
-        return -1;
-
-    //para sair do jogo
-    bool demo = true;
-
-    //Variáveis para controlar opção escolhida e laços.
-    int option = 0;
-    int i, j;
-
-    //Criamos uma nova estrutura que será enviada e recebida do servidor.
-    DADOS pacote;
-    //Carregamos uma mensagem e um valor nesse pacote.
-    char msg[]={"Oi Servidor!"};
-    strcpy(pacote.mensagem, msg);
-    pacote.valor = 42;
-
-    //Esse IP irá nos conectar a "nós mesmos", apenas para efeito de testes.
-    char ServerIP[30]={"127.0.0.1"};
-    connectToServer(ServerIP);
-
-    //Texto padrão para demonstração.
-    char sampleText[13][40] = {
-                               {"Lorem ipsum dolor sit amet,"},
-                               {"consectetur adipiscing elit,"},
-                               {"sed do eiusmod tempor incididunt"},
-                               {"ut labore et dolore magna aliqua."},
-                               {"Ut enim ad minim veniam, quis"},
-                               {"nostrud exercitation ullamco"},
-                               {"laboris nisi ut aliquip ex ea"},
-                               {"commodo consequat. Duis aute"},
-                               {"irure dolor in reprehenderit"},
-                               {"in voluptate velit esse cillum"},
-                               {"dolore eu fugiat nulla pariatur."},
-                               {"Excepteur sint occaecat cupidatat"},
-                               {"non proident, sunt in culpa qui."}
-                              };
-
-    while(demo)
-    {
-        //Iniciamos a contagem do tempo quando o laço se inicia
-        startTimer();
-
-        //Enquanto a fila de eventos não estiver vazia
-        while(!al_is_event_queue_empty(eventsQueue))
-        {
-            //Cria um novo evento para armazenar as entradas recebidas
-            ALLEGRO_EVENT eventoDemo;
-            //Espera por um evento
-            al_wait_for_event(eventsQueue, &eventoDemo);
-
-            //Se o tipo do evento for uma tecla sendo apertada
-            if(eventoDemo.type == ALLEGRO_EVENT_KEY_DOWN)
-            {
-                //Vamos ver qual tecla foi...
-                switch(eventoDemo.keyboard.keycode)
-                {
-                    //Apertou seta para a direita
-                    case ALLEGRO_KEY_RIGHT:
-                        option = (option+1)%4;
-                        break;
-
-                    //Apertou seta para a esquerda
-                    case ALLEGRO_KEY_LEFT:
-                        option = (option+3)%4;
-                        break;
+void att_mapa(char mapa[tam][tam],person jogadores[max], int quant_jogadores){
+    int i,j, ind;
+    bool tem_jog;
+    for(i=0;i<tam;i++){
+        for(j=0;j<tam;j++){
+            tem_jog = false;
+            for(ind=0;ind<quant_jogadores;ind++){
+                if((jogadores[ind].y == i)&&(jogadores[ind].x == j)){
+                    mapa[i][j] = (ind +'a');
+                    tem_jog = true;
+                }
+                if(tem_jog==false){
+                    mapa[i][j] = '0';
                 }
             }
-
-            //Evento especial caso tenha clicado no X da janela
-            if(eventoDemo.type == ALLEGRO_EVENT_DISPLAY_CLOSE) demo = false;
-                
         }
+    }
+}
+
+void att_camera(char mapa[tam][tam], person jogador, int *lin_ini ,int *col_ini){
+    //deslocamento dos indices iniciais da matriz que vai ser a janela
+    if(jogador.hori == 'w'){
+        if(jogador.x <=(*col_ini + 100)){
+            *col_ini--;
+        }
+        if(jogador.y <=(*lin_ini +100)){
+            *lin_ini--;
+        }
+    }else if(jogador.hori == 's'){
+        if(jogador.x >=(*col_ini + 988)){
+            *col_ini++;
+        }
+        if(jogador.y >=(*lin_ini + 588)){
+            *lin_ini++;
+        }
+    }else if(jogador.hori == 'a'){
+        if(jogador.x <=(*col_ini + 100)){
+            *col_ini--;
+        }
+        if(jogador.y >=(*lin_ini +588)){
+            *lin_ini++;
+        }
+    }else {
+        if(jogador.x >=(*col_ini + 988)){
+            *col_ini++;
+        }
+        if(jogador.y <=(*lin_ini +100)){
+            *lin_ini--;
+        }
+    }
+}
+void extrai_janela(char mapa[tam][tam],char janela[HEIGHT][WIDTH], int ini_lin, int ini_col){
+    int im,jm, iw = 0,jw = 0;
+    for(im=ini_lin; im<(ini_lin +HEIGHT);im++){
+        for(jm = ini_col; jm<(ini_col + WIDTH);jm){
+            janela[iw][jw] = mapa[im][jm];
+            iw++;
+            jw++;
+        }
+    }
+}
+int main(){
+    int x_close=9;
+    coreInit();
+    windowInit(larg, alt, "PUNCH KILL");
+    inputInit();
+    fontInit();
+    loadGraphics();
+    al_draw_bitmap(hscs, 0, 0, 0);
+    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, 70, ALLEGRO_ALIGN_CENTRE, "PUNCH KILL");
+    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
+    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 420, ALLEGRO_ALIGN_CENTRE, "Credits");
+    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 620, ALLEGRO_ALIGN_CENTRE, "Quit Game");
+    al_flip_display();
+    x_close = digitemenu();
+    if(x_close==0){
+        return 0;
+    }
+    else if(x_close==1){
         
-        //Agora vamos tratar as opções, cada vez que uma seta for apertada, devemos circular pelas janelas...
-        switch(option)
-        {
-            case 0:
-                //essa janela contem um exemplo de imagem
-                al_draw_text(ubuntu, al_map_rgb(255, 255, 255), LARGURA/2, 10, ALLEGRO_ALIGN_CENTRE, "Exemplo: Imagem1");
-                al_draw_bitmap(hscs, 50, 50, 0);
-                break;
-
-            case 1:
-                //essa janela contem outro exemplo de imagem
-                al_draw_text(ubuntu, al_map_rgb(0, 0, 255), LARGURA/2, 10, ALLEGRO_ALIGN_CENTRE, "Exemplo: Imagem2");
-                al_draw_bitmap(objects, 140, 60, 0);
-                break;
-
-            case 2:
-                //essa janela mostra o uso de fontes
-                al_draw_text(ubuntu, al_map_rgb(255, 255, 255), LARGURA/2, 10, ALLEGRO_ALIGN_CENTRE, "Exemplo de Fonte:");
-                
-                for(i=0; i<13; ++i)
-                    al_draw_text(start, al_map_rgb(255, 255, 0), LARGURA/2, 60+(i*32), ALLEGRO_ALIGN_CENTRE, sampleText[i]);
-
-                break;
-
-            case 3:
-                //agora vamos testar nossa comunicação
-                //apenas mostrando o titulo
-                al_draw_text(ubuntu, al_map_rgb(255, 255, 255), LARGURA/2, 10, ALLEGRO_ALIGN_CENTRE, "Enviando Mensagem para Servidor:");
-
-                //colocando a mensagem no pacote e o valor
-                strcpy(pacote.mensagem, "Oi Servidor!");
-                pacote.valor = 42;
-                //mostrando na tela
-                al_draw_text(ubuntu, al_map_rgb(255, 255, 0), LARGURA/2, 100, ALLEGRO_ALIGN_CENTRE, pacote.mensagem);
-                al_draw_textf(ubuntu, al_map_rgb(255, 255, 0), LARGURA/2, 132, ALLEGRO_ALIGN_CENTRE, "Valor: %d", pacote.valor);
-
-                al_draw_text(ubuntu, al_map_rgb(255, 0, 0), LARGURA/2, 220, ALLEGRO_ALIGN_CENTRE, "...");
-                
-                //enviando a mensagem
-                sendMsgToServer(&pacote, sizeof(pacote));
-
-                //recebendo a mensagem
-                //experimentem trocar WAIT_FOR_IT por DONT_WAIT...
-                recvMsgFromServer(&pacote, WAIT_FOR_IT);
-
-                //exibindo a mensagem recebida
-                al_draw_text(ubuntu, al_map_rgb(255, 255, 255), LARGURA/2, 300, ALLEGRO_ALIGN_CENTRE, pacote.mensagem);
-                al_draw_textf(ubuntu, al_map_rgb(255, 255, 255), LARGURA/2, 332, ALLEGRO_ALIGN_CENTRE, "Valor: %d", pacote.valor);
-
-                break;
+    }
+    else if(x_close==2){
+        
+    }
+    else if(x_close==3){
+        return 0;
+    }
+    //conexão com o servidor
+    char ip[12];
+    int ret_conec, id_local;
+    do{
+        printf("digite seu IP: ");
+        scanf(" %s", ip);
+        ret_conec = connectToServer(ip);
+        if(ret_conec==SERVER_UP){
+            printf("conexao estabelecida!\n");
+            recvMsgFromServer(&id_local,WAIT_FOR_IT);
+        }else{
+            printf("conexao nao estabelecida!\n");
         }
+    }while(ret_conec!=SERVER_UP);
 
+    //espera o servidor dar o sinal que a sala foi fechada
+    char status_send, status_recb;
+    int num_jogadores;
+    recvMsgFromServer(&status_recb, WAIT_FOR_IT);
+    if(status_recb == 'm'){
+        recvMsgFromServer(&num_jogadores, WAIT_FOR_IT);
+        printf("Partida iniciada com apenas(%i jogadores)\n", num_jogadores);
+    }else{
+        printf("Partida iniciada com sala cheia\n");
+    }
+    
+    //recebe as posições iniciais dos jogadores
+    person jogadores[max];
+    recvMsgFromServer(jogadores,WAIT_FOR_IT);
 
+    //distribui os jogadores por uma matriz que representa o mapa do campo
+    char mapa[tam][tam];
+    memset(mapa,'0', sizeof(mapa));
+    att_mapa(mapa,jogadores, num_jogadores);
 
-        al_flip_display();
-        al_clear_to_color(al_map_rgb(0, 0, 0));
-        FPSLimit();
+    //timer para o inicio
+    int ind_f;
+    for(ind_f = 0;ind_f <5; ind_f++){
+        printf("a partida vai começar em (%i) segundos\n", (5 -ind_f));
+        al_rest(1);     
     }
 
+    //variaveis para a janela de exibição
+    char janela_p[HEIGHT][WIDTH];
+    int ini_lin, ini_col;
+
+    //setagem inicial do inicio da janela nas matrizes
+    //como inicialmente todos os jogadores estão olhando para frente
+    ini_lin =(jogadores[id_local].y - 588);
+    ini_col = (jogadores[id_local].x - 545);
+
+    // laço da partida
+    bool vivo = true;
+    char caracter;
+    while(vivo ==true){
+
+        startTimer();
+        //coleta a entrada do cliente para a rodada
+        caracter = getch();
+        if(caracter == 'W'||caracter == 'w'){
+            if(jogadores[id_local].x>0){
+                jogadores[id_local].x--;
+                jogadores[id_local].hori = 'w';
+            }
+        }else if(caracter == 'S'||caracter == 's'){
+            if(jogadores[id_local].x<(tam-1)){
+                jogadores[id_local].x++;
+                jogadores[id_local].hori = 's';
+            }
+        }else if(caracter == 'A'||caracter == 'a'){
+            if(jogadores[id_local].y>0){
+                jogadores[id_local].y--;
+                jogadores[id_local].hori = 'a';
+            }
+        }else if(caracter == 'D'||caracter == 'd'){
+            if(jogadores[id_local].y<(tam-1)){
+                jogadores[id_local].y++;
+                jogadores[id_local].hori = 'd';
+            }
+        }
+        if((caracter == 'j')||(caracter == 'J')){
+            jogadores[id_local].ataque = '1';
+        }else if((caracter == 'k')||(caracter == 'K')){
+            jogadores[id_local].ataque = '2';
+        }else if((caracter == 'l')||(caracter == 'L')){
+            jogadores[id_local].ataque = '3';
+        }else{
+            jogadores[id_local].ataque = '0';
+        }
+
+        // atualizando a posição da camera
+        att_camera(mapa, jogadores[id_local],&ini_lin,&ini_col);
+
+        //pegando do mapa estatico a parte que sera exibida
+        //extrai_janela(mapa_camp,janela_camp, ini_lin,ini_col);
+
+        // pegando do mapa de jogadores todo a parte que sera exibida pela na janela
+        extrai_janela(mapa, janela_p,ini_lin, ini_col);
+
+        //codigo da allegro para exibir a tela atual...
+
+        //envia minhas alterações para o server e recebo as alterações de todos os jogadores
+        sendMsgToServer(&jogadores[id_local], sizeof(person));
+        recvMsgFromServer(jogadores,WAIT_FOR_IT);
+        printf("coordenadas(%i,%i)\n",jogadores[id_local].x, jogadores[id_local].y);
+        
+        //atualiza a matriz com as novas posições recebidas do server
+        att_mapa(mapa,jogadores, num_jogadores);
+        
+        //verifiação de se o cliente ainda está vivo
+        if(jogadores[id_local].life == 0){
+            vivo = false;
+        }
+        FPSLimit();
+    }
     return 0;
 }

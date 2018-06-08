@@ -149,11 +149,11 @@ bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
 int main(){
     int x_close=9;
     coreInit();
-    
     windowInit(larg, alt, "PUNCH KILL");
     inputInit();
     fontInit();
     loadGraphics();
+    /*
     al_draw_bitmap(hscs, 0, 0, 0);
     al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, 70, ALLEGRO_ALIGN_CENTRE, "PUNCH KILL");
     al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
@@ -165,7 +165,7 @@ int main(){
         return 0;
     }
     else if(x_close==1){
-        select_player();
+        
     }
     else if(x_close==2){
         //creditos
@@ -187,19 +187,21 @@ int main(){
     else if(x_close==3){
         return 0;
     }*/
+
+    char ip[12]={"__________"};
     //conexão com o servidor
-    char ip[12];
-    int ret_conec, id_local;
+    int ret_conec, id_local, ind;
     do{
-        printf("digite seu IP: ");
-        scanf(" %s", ip);
+        digite_ip(ip);
         ret_conec = connectToServer(ip);
         if(ret_conec==SERVER_UP){
             printf("conexao estabelecida!\n");
             recvMsgFromServer(&id_local,WAIT_FOR_IT);
         }else{
             printf("conexao nao estabelecida!\n");
-            printf("\n%i\n", ret_conec);
+            for(ind = 0; ind<11;ind++){
+                ip[ind] = '_';
+            }
             if(ret_conec== SERVER_CLOSED){
                 printf("servidor fechado\n");
             }

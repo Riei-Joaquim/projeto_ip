@@ -16,10 +16,6 @@ void sort_posi(int *vetor){
         vetor[a]=rand()%tam;
     }
 }
-void bubble_sort(person rod_dados[max],int ids[max]){
-    /*função que pega os dados ordenados por ordem crescente de ids e os 
-    ordenam baseados na ordem crescente de tempo*/
-}
 void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
     int ind, distx, disty;
     if(jogadores[id_ana].hori =='w'){
@@ -29,7 +25,16 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
                disty = (jogadores[id_ana].y -jogadores[ind].y);
                if(((distx >-32)&&(distx<32))&&(disty<64)){
                    jogadores[ind].life--;
-                   jogadores[ind].y -= 64;
+                   if(jogadores[ind].y>64){
+                       jogadores[ind].y -= 64;
+                   }else{
+                       jogadores[ind].y = 0;
+                   }
+                   
+                   if(jogadores[ind].y <32){
+                       jogadores[ind].life = 0;
+                       printf("morte nos espinhos\n");
+                   }
                }
            } 
         }
@@ -40,7 +45,16 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
                disty = (jogadores[id_ana].y -jogadores[ind].y);
                if(((distx >-32)&&(distx<32))&&(disty> -64)){
                    jogadores[ind].life--;
-                   jogadores[ind].y += 64;
+                   if(jogadores[ind].y <(tam*2-96){
+                       jogadores[ind].y += 64;
+                   }else{
+                       jogadores[ind].y  = (tam*2 -32);
+                   }
+                      
+                   if(jogadores[ind].y >(tam*2 -32)){
+                       jogadores[ind].life = 0;
+                       printf("morte nos espinhos\n");
+                   }
                }
            } 
         }
@@ -51,7 +65,17 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
                disty = (jogadores[id_ana].y -jogadores[ind].y);
                if(((disty >-32)&&(disty<32))&&(distx> 64)){
                    jogadores[ind].life--;
-                   jogadores[ind].x +=64;
+                   if(jogadores[ind].x <(tam*2 - 96)){
+                       jogadores[ind].x +=64;
+                   }else{
+                       jogadores[ind].x = (tam*2 - 32);
+                   }
+                   
+                   if(jogadores[ind].x >(alt*2 -32)){
+                       jogadores[ind].life = 0;
+                       printf("morte nos espinhos\n");
+                   }
+                   
                }
            } 
         }
@@ -62,7 +86,16 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
                disty = (jogadores[id_ana].y -jogadores[ind].y);
                if(((disty >-32)&&(disty<32))&&(distx>-64)){
                    jogadores[ind].life--;
-                   jogadores[ind].x -=64;
+                   if(jogadores[ind].x >64){
+                       jogadores[ind].x -=64;
+                   }else{
+                       jogadores[ind].x = 0;
+                   }
+                   
+                   if((jogadores[ind].x <32)){
+                       jogadores[ind].life = 0;
+                       printf("morte nos espinhos\n");
+                   }
                }
            } 
         }
@@ -74,12 +107,17 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
     if(jogadores[id_ana].hori =='w'){
         for(ind=0;ind<num_jogadores;ind++){
            if(ind!=id_ana){
-               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               distx = (jogadores[id_ana].x -jogadores[ind].x );
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if((distx >= 32)&&(disty>-32)){
+               if((distx <= 32)&&(disty<=32)){
                    jogadores[ind].life--;
                    jogadores[ind].y -= 32;
-                   jogadores[ind].x -= 32;
+                   jogadores[ind].x += 32;
+               }
+               
+               if((jogadores[ind].x >(tam*2 - 64))||(jogadores[ind].y <32)){
+                       jogadores[ind].life = 0;
+                       printf("morte nos espinhos\n");
                }
            } 
         }
@@ -87,10 +125,16 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
         for(ind=0;ind<num_jogadores;ind++){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x);
-               disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if(((distx >-32)&&(distx<32))&&(disty> -64)){
+               disty = (jogadores[ind].y -jogadores[id_ana].y);
+               if((distx <=32)&&(disty<=32)){
                    jogadores[ind].life--;
-                   jogadores[ind].y += 64;
+                   jogadores[ind].y += 32;
+                   jogadores[ind].x -= 32;
+               }
+               
+               if((jogadores[ind].x <32)||(jogadores[ind].y >(tam*2 -64))){
+                       jogadores[ind].life = 0;
+                       printf("morte nos espinhos\n");
                }
            } 
         }
@@ -99,9 +143,15 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x);
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if(((disty >-32)&&(disty<32))&&(distx> 64)){
+               if((disty <=32)&&(distx<=32)){
                    jogadores[ind].life--;
-                   jogadores[ind].x +=64;
+                   jogadores[ind].y += 32;
+                   jogadores[ind].x += 32;
+               }
+               
+               if((jogadores[ind].x >(tam*2 -64))||(jogadores[ind].y >(tam*2 -64))){
+                       jogadores[ind].life = 0;
+                       printf("morte nos espinhos\n");
                }
            } 
         }
@@ -110,9 +160,15 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x);
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if(((disty >-32)&&(disty<32))&&(distx>-64)){
+               if((disty<=32)&&(distx<=32)){
                    jogadores[ind].life--;
-                   jogadores[ind].x -=64;
+                   jogadores[ind].y -= 32;
+                   jogadores[ind].x -= 32;
+               }
+               
+               if((jogadores[ind].x <32)||(jogadores[ind].y <32)){
+                       jogadores[ind].life = 0;
+                       printf("morte nos espinhos\n");
                }
            } 
         }

@@ -14,7 +14,7 @@ typedef struct{
     int x;
     int y;
     int id;
-}janela;
+}evento;
 void att_mapa(char mapa[tam][tam],person jogadores[max], int quant_jogadores){
     int i,j, ind;
     bool tem_jog;
@@ -66,28 +66,45 @@ void att_camera(char mapa[tam][tam], person jogador, int *lin_ini ,int *col_ini)
         }
     }
 }
-void anali_em_janela(char mapa[tam][tam],janela localizados[max], int ini_lin, int ini_col){
-    int im, jm, ind = 0;
-    /*nova ideia para como coletar a janela no cliente da matriz campo
-    for(im=ini_lin; im<(ini_lin +alt);im++){
-        for(jm = ini_col; jm<(ini_col + larg);jm++){
-            if(mapa[im][jm]!='0'){
-                if(mapa[im][jm]!='a'){
-                    localizados[ind].id = 0;
-                    localizados[ind].x = 
-                    localizados[ind].y = 
-                }else if(mapa[im][jm]!='0'){
-
-                }else if(mapa[im][jm]!='0'){
-                    
-                }else if(mapa[im][jm]!='0'){
-                    
-                }else if(mapa[im][jm]!='0'){
-                    
+void anali_jog_janela(char mapa[tam][tam],evento ter_players[max], int ini_lin, int ini_col,int *ind){
+    int im, jm;
+    for(im=0; im<alt;im++){
+        for(jm = 0; jm<larg;jm++){
+            if(mapa[im+alt][jm+larg]!='0'){
+                if(mapa[im+alt][jm+larg]!='a'){
+                    ter_players[*ind].id = 0;
+                    ter_players[*ind].x = jm;
+                    ter_players[*ind].y = im;
+                    *ind++;
+                }else if(mapa[im+alt][jm+larg]!='b'){
+                    ter_players[*ind].id = 1;
+                    ter_players[*ind].x = jm;
+                    ter_players[*ind].y = im;
+                    *ind++;
+                }else if(mapa[im+alt][jm+larg]!='c'){
+                    ter_players[*ind].id = 2;
+                    ter_players[*ind].x = jm;
+                    ter_players[*ind].y = im;
+                    *ind++;
+                }else if(mapa[im+alt][jm+larg]!='d'){
+                    ter_players[*ind].id = 3;
+                    ter_players[*ind].x = jm;
+                    ter_players[*ind].y = im;
+                    *ind++;
+                }else if(mapa[im+alt][jm+larg]!='e'){
+                    ter_players[*ind].id = 4;
+                    ter_players[*ind].x = jm;
+                    ter_players[*ind].y = im;
+                    *ind++;
+                }else if(mapa[im+alt][jm+larg]!='f'){
+                    ter_players[*ind].id = 5;
+                    ter_players[*ind].x = jm;
+                    ter_players[*ind].y = im;
+                    *ind++;
                 }
             }
         }
-    }*/
+    }
 }
 bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
     int ind;
@@ -148,7 +165,7 @@ int main(){
         return 0;
     }
     else if(x_close==1){
-        //jogo
+        
     }
     else if(x_close==2){
         //creditos
@@ -161,8 +178,12 @@ int main(){
           x+=10;
         }
         if()//se chegar no fim da imagem reseta
+        }
+        //colocar o press esc to exit
+        else if(x_close==3){
+            return 0;
+        }
     }
-    //colocar o press esc to exit
     else if(x_close==3){
         return 0;
     }*/
@@ -178,9 +199,13 @@ int main(){
             recvMsgFromServer(&id_local,WAIT_FOR_IT);
         }else{
             printf("conexao nao estabelecida!\n");
+            printf("\n%i\n", ret_conec);
+            if(ret_conec== SERVER_CLOSED){
+                printf("servidor fechado\n");
+            }
         }
     }while(ret_conec!=SERVER_UP);
-
+    printf("\n%i\n", ret_conec);
     //espera o servidor dar o sinal que a sala foi fechada
     char status_send, status_recb;
     int num_jogadores;
@@ -215,11 +240,22 @@ int main(){
     //setagem inicial do inicio da janela nas matrizes
     //como inicialmente todos os jogadores estão olhando para frente
     ini_lin =(jogadores[id_local].y - 588);
+    if(ini_lin<0){
+        ini_lin = 0;
+    }else if(ini_lin>alt){
+        ini_lin = alt;
+    }
     ini_col = (jogadores[id_local].x - 545);
-
+    if(ini_col<0){
+        ini_col = 0;
+    }else if(ini_col>larg){
+        ini_col = larg;
+    }
     // laço da partida
     bool vivo = true;
     char caracter;
+    evento ter_players[max];
+    int num_visi, ind_vivo;
     while(vivo ==true){
 
         startTimer();
@@ -246,6 +282,7 @@ int main(){
                 jogadores[id_local].hori = 'd';
             }
         }
+
         if((caracter == 'j')||(caracter == 'J')){
             jogadores[id_local].ataque = '1';
         }else if((caracter == 'k')||(caracter == 'K')){
@@ -260,7 +297,8 @@ int main(){
         att_camera(mapa, jogadores[id_local],&ini_lin,&ini_col);
 
         // pegando do mapa de jogadores todo a parte que sera exibida pela na janela
-        //extrai_janela(mapa, janela_p,ini_lin, ini_col);
+        num_visi= 0;
+        anali_jog_janela(mapa, ter_players, ini_lin,ini_col,&num_visi);
 
         //codigo da allegro para exibir a tela atual...
 
@@ -271,8 +309,9 @@ int main(){
             printf("YOU-DIED\n");
             vivo = false;
         }
-        printf("coordenadas(%i,%i)\n",jogadores[id_local].x, jogadores[id_local].y);
-        
+        printf("\n");
+        printf("coordenadas(x %i,y %i)\n",jogadores[id_local].x, jogadores[id_local].y);
+        printf("inicio da camera(x %i,y %i)\n",ini_col,ini_lin);
         //atualiza a matriz com as novas posições recebidas do server
         att_mapa(mapa,jogadores, num_jogadores);
         
@@ -280,7 +319,16 @@ int main(){
         if(jogadores[id_local].life == 0){
             vivo = false;
         }
+        
+        // verificação de se a partida acabou e recebe que id ganhou
+        recvMsgFromServer(&status_recb, WAIT_FOR_IT);
+        if(status_recb == '1'){
+            recvMsgFromServer(&ind_vivo, WAIT_FOR_IT);
+            printf("partida encerrada\n");
+            printf("O jogador %i venceu\n", (ind_vivo+1));
+        }
         FPSLimit();
+        
     }
     return 0;
 }

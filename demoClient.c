@@ -10,6 +10,11 @@ typedef struct{
     char hori;
     char ataque;
 }person;
+typedef struct{
+    int x;
+    int y;
+    int id;
+}janela;
 void att_mapa(char mapa[tam][tam],person jogadores[max], int quant_jogadores){
     int i,j, ind;
     bool tem_jog;
@@ -61,15 +66,28 @@ void att_camera(char mapa[tam][tam], person jogador, int *lin_ini ,int *col_ini)
         }
     }
 }
-void extrai_janela(char mapa[tam][tam],char janela[alt][larg], int ini_lin, int ini_col){
-    int im,jm, iw = 0,jw = 0;
-    for(im=ini_lin; im<(ini_lin +larg);im++){
-        for(jm = ini_col; jm<(ini_col + WIDTH);jm){
-            janela[iw][jw] = mapa[im][jm];
-            iw++;
-            jw++;
+void anali_em_janela(char mapa[tam][tam],janela localizados[max], int ini_lin, int ini_col){
+    int im, jm, ind = 0;
+    /*nova ideia para como coletar a janela no cliente da matriz campo
+    for(im=ini_lin; im<(ini_lin +alt);im++){
+        for(jm = ini_col; jm<(ini_col + larg);jm++){
+            if(mapa[im][jm]!='0'){
+                if(mapa[im][jm]!='a'){
+                    localizados[ind].id = 0;
+                    localizados[ind].x = 
+                    localizados[ind].y = 
+                }else if(mapa[im][jm]!='0'){
+
+                }else if(mapa[im][jm]!='0'){
+                    
+                }else if(mapa[im][jm]!='0'){
+                    
+                }else if(mapa[im][jm]!='0'){
+                    
+                }
+            }
         }
-    }
+    }*/
 }
 bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
     int ind;

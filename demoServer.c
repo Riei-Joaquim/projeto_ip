@@ -13,7 +13,7 @@ typedef struct{
 void sort_posi(int *vetor){
     int a;
     for(a=0; a<6;a++){
-        vetor[a]=rand()%tam;
+        vetor[a]=rand()%(tam-64);
     }
 }
 void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
@@ -45,13 +45,13 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
                disty = (jogadores[id_ana].y -jogadores[ind].y);
                if(((distx >-32)&&(distx<32))&&(disty> -64)){
                    jogadores[ind].life--;
-                   if(jogadores[ind].y <(tam*2-96){
+                   if(jogadores[ind].y <(tam-96)){
                        jogadores[ind].y += 64;
                    }else{
-                       jogadores[ind].y  = (tam*2 -32);
+                       jogadores[ind].y  = (tam -32);
                    }
                       
-                   if(jogadores[ind].y >(tam*2 -32)){
+                   if(jogadores[ind].y >(tam -32)){
                        jogadores[ind].life = 0;
                        printf("morte nos espinhos\n");
                    }
@@ -65,13 +65,13 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
                disty = (jogadores[id_ana].y -jogadores[ind].y);
                if(((disty >-32)&&(disty<32))&&(distx> 64)){
                    jogadores[ind].life--;
-                   if(jogadores[ind].x <(tam*2 - 96)){
+                   if(jogadores[ind].x <(tam - 96)){
                        jogadores[ind].x +=64;
                    }else{
-                       jogadores[ind].x = (tam*2 - 32);
+                       jogadores[ind].x = (tam - 32);
                    }
                    
-                   if(jogadores[ind].x >(alt*2 -32)){
+                   if(jogadores[ind].x >(tam -32)){
                        jogadores[ind].life = 0;
                        printf("morte nos espinhos\n");
                    }
@@ -115,7 +115,7 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
                    jogadores[ind].x += 32;
                }
                
-               if((jogadores[ind].x >(tam*2 - 64))||(jogadores[ind].y <32)){
+               if((jogadores[ind].x >(tam - 64))||(jogadores[ind].y <32)){
                        jogadores[ind].life = 0;
                        printf("morte nos espinhos\n");
                }
@@ -132,7 +132,7 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
                    jogadores[ind].x -= 32;
                }
                
-               if((jogadores[ind].x <32)||(jogadores[ind].y >(tam*2 -64))){
+               if((jogadores[ind].x <32)||(jogadores[ind].y >(tam -64))){
                        jogadores[ind].life = 0;
                        printf("morte nos espinhos\n");
                }
@@ -149,7 +149,7 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
                    jogadores[ind].x += 32;
                }
                
-               if((jogadores[ind].x >(tam*2 -64))||(jogadores[ind].y >(tam*2 -64))){
+               if((jogadores[ind].x >(tam -64))||(jogadores[ind].y >(tam -64))){
                        jogadores[ind].life = 0;
                        printf("morte nos espinhos\n");
                }

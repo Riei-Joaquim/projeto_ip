@@ -149,7 +149,7 @@ bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
 int main(){
     int x_close=9;
     coreInit();
-    /*
+    
     windowInit(larg, alt, "PUNCH KILL");
     inputInit();
     fontInit();
@@ -165,7 +165,7 @@ int main(){
         return 0;
     }
     else if(x_close==1){
-        
+        select_player();
     }
     else if(x_close==2){
         //creditos

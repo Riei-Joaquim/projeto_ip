@@ -399,4 +399,106 @@ int select_player(){
         al_flip_display();
         FPSLimit();
     }
-}    
+}
+void digite_ip(char ip[12]){
+    int ret_conec, id_local, ind ,i = 0;
+    char digito;
+    int apertou;
+    while ((i<=10)&&(digito!='\0')){
+        al_draw_bitmap(hscs, 0, 0, 0);
+        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2-80), 120, ALLEGRO_ALIGN_CENTRE, "Digite o IP do server:");
+        al_draw_text(telaip, al_map_rgb(255, 255, 255), 150, 210, ALLEGRO_ALIGN_LEFT, ip);
+
+        ALLEGRO_EVENT evento;
+        ALLEGRO_TIMEOUT timeout;
+        al_init_timeout(&timeout, 0.05);
+
+        apertou = al_wait_for_event_until(eventsQueue, &evento, &timeout);
+
+        if(apertou && evento.type == ALLEGRO_EVENT_KEY_DOWN){
+            switch(evento.keyboard.keycode){
+                case ALLEGRO_KEY_0:
+                digito='0';
+                break;
+                case ALLEGRO_KEY_1:
+                digito='1';
+                break;            
+                case ALLEGRO_KEY_2:
+                digito='2';
+                break;        
+                case ALLEGRO_KEY_3:
+                digito='3';
+                break;
+                case ALLEGRO_KEY_4:
+                digito='4';
+                break;
+                case ALLEGRO_KEY_5:
+                digito='5';
+                break;
+                case ALLEGRO_KEY_6:
+                digito='6';
+                break;
+                case ALLEGRO_KEY_7:
+                digito='7';
+                break;
+                case ALLEGRO_KEY_8:
+                digito='8';
+                break;
+                case ALLEGRO_KEY_9:
+                digito='9';
+                break;
+                case ALLEGRO_KEY_PAD_0:
+                digito='0';
+                break;
+                case ALLEGRO_KEY_PAD_1:
+                digito='1';
+                break;
+                case ALLEGRO_KEY_PAD_2:
+                digito='2';
+                break;
+                case ALLEGRO_KEY_PAD_3:
+                digito='3';
+                break;
+                case ALLEGRO_KEY_PAD_4:
+                digito='4';
+                break;
+                case ALLEGRO_KEY_PAD_5:
+                digito='5';
+                break;
+                case ALLEGRO_KEY_PAD_6:
+                digito='6';
+                break;
+                case ALLEGRO_KEY_PAD_7:
+                digito='7';
+                break;
+                case ALLEGRO_KEY_PAD_8:
+                digito='8';
+                break;
+                case ALLEGRO_KEY_PAD_9:
+                digito='9';
+                break;
+                case ALLEGRO_KEY_BACKSPACE:
+                digito= 'b';
+                break;
+                case ALLEGRO_KEY_FULLSTOP:
+                digito= '.';
+                break;
+                case ALLEGRO_KEY_PAD_ENTER:
+                digito= '\0';
+                break;
+            }
+            if((digito !='b')&(i<=10)){
+                ip[i] = digito;
+                i++;
+            }else if(i>0){
+                i--;
+                ip[i] = '_';
+            }
+            
+        }
+        al_flip_display();  
+    }
+    ip[10] = '\0';
+    printf("\n%s\n", ip);
+    ret_conec = connectToServer(ip);
+}

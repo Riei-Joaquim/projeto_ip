@@ -148,11 +148,21 @@ int main(){
         return 0;
     }
     else if(x_close==1){
-        
+        //jogo
     }
     else if(x_close==2){
-        
+        //creditos
+        int x=0;
+        while(x<720){// (tamanho da imagem mais 720 ) X 1120 (ultima parte eh fundo preto)
+          imagem = al_load_bitmap("fundocreditos.jpg");
+          al_draw_bitmap(imagem, x , 0, 0);
+          al_flip_display();
+          al_rest(0.1);
+          x+=10;
+        }
+        if()//se chegar no fim da imagem reseta
     }
+    //colocar o press esc to exit
     else if(x_close==3){
         return 0;
     }*/

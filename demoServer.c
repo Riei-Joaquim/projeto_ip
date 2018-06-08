@@ -174,6 +174,7 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
         }
     }
 }
+
 int main(){
     serverInit(max);
     //exibe configurações de rede para facilitar a conexão
@@ -199,7 +200,7 @@ int main(){
                 temp_sem_conec +=0.1;
             }
         }
-        printf("%lf - %i\n", temp_sem_conec, ind_jog);
+        printf("%lf - %i\n", temp_sem_conec, players[ind_jog]);
         if((ind_jog ==(max-1))||((temp_sem_conec >=10.0)&&(ind_jog >1))){
             condi_ini =1;
         } 
@@ -240,8 +241,8 @@ int main(){
     al_rest(5);
 
     //laço de uma partida
-    bool partida = true;
-    int ids[max];
+    bool partida = true, valido;
+    int jog_vivos, ind_vivo;
     while(partida == true){
         printf("entrou\n");
         rejectConnection();
@@ -252,7 +253,6 @@ int main(){
         //recebe as modificações do jogador
         for(ind_id=0; ind_id<ind_jog;ind_id++){
             recvMsgFromClient(&jogadores[ind_id], players[ind_id], WAIT_FOR_IT);
-            ids[ind_id] = ind_id;
         }
 
         //verificação de hits
@@ -274,15 +274,31 @@ int main(){
         }
 
         for(ind_id=0;ind_id<num_jogadores;ind_id++){
-            printf("%i - %c - %i - %i - %i \n",jogadores[ind_id].life,jogadores[ind_id].hori,jogadores[ind_id].ataque,jogadores[ind_id].x, jogadores[ind_id].y);
-            
+            printf("%i - %c - %c - %i - %i \n",jogadores[ind_id].life,jogadores[ind_id].hori,jogadores[ind_id].ataque,jogadores[ind_id].x, jogadores[ind_id].y);  
         }
-        /*com os dados da rodada e com quais ids eles remetem será dado um bubble sort
-        para organizar e processar as atualização no servidor pela ordem cronologica*/
-        //bubble_sort(rod_dados,ids);
+
+        //verifica se ainda tem jogadores na partidores e se alguem já ganhou a partida
+        jog_vivos = 0;
+        for(ind_id=0;ind_id<num_jogadores;ind_id++){
+            if(jogadores[ind_id].life > 0){
+                jog_vivos++;
+                ind_vivo = ind_id;
+            }
+        }
+
+        //manda aos clientes se vai ter proxima rodada e se não tiver diz quem ganhou
+        if(jog_vivos==1){
+            status_send = '1';
+            broadcast(&status_send, sizeof(char));
+            sendMsgToClient(&ind_vivo, sizeof(int),players[ind_vivo]);
+            partida = false;
+        }else{
+            status_send = '2';
+            broadcast(&status_send, sizeof(char));
+        }
+
         FPSLimit();
-        
-        
+
     }
     serverReset();
     return 0;

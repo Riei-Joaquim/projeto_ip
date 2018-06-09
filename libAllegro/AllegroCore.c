@@ -110,22 +110,21 @@ bool fontInit()
         return false;
     }
     
-    starthigh = al_load_font("Resources/Fonts/pressStart.ttf", 30, 0);
-    if (!start)
-    {
-        fprintf(stderr, "Falha ao carregar \"pressStart.ttf\".\n");
-        return false;
-    }
-
     ubuntu = al_load_font("Resources/Fonts/pressStart.ttf", 50, 0);
     if (!ubuntu)
     {
         fprintf(stderr, "Falha ao carregar \"Ubuntu-R.ttf\".\n");
         return false;
     }
-
+    telaip = al_load_font("Resources/Fonts/pressStart.ttf", 30, 0);
+    if (!telaip)
+    {
+        fprintf(stderr, "Falha ao carregar \"Ubuntu-R.ttf\".\n");
+        return false;
+    }
     return true;
 }
+
 
 void allegroEnd()
 {
@@ -385,16 +384,16 @@ int select_player(){
         }
         al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2), 50, ALLEGRO_ALIGN_CENTRE, "SELECT YOUR FIGHTER");
         al_flip_display();
-        al_rest(0.05);
+        al_rest(0.02);
         al_draw_text(ubuntu, al_map_rgb(205, 205, 205), (larg/2), 50, ALLEGRO_ALIGN_CENTRE, "SELECT YOUR FIGHTER");
         al_flip_display();
-        al_rest(0.05);
+        al_rest(0.02);
         al_draw_text(ubuntu, al_map_rgb(150, 150, 150), (larg/2), 50, ALLEGRO_ALIGN_CENTRE, "SELECT YOUR FIGHTER");
         al_flip_display();
-        al_rest(0.05);
+        al_rest(0.02);
         al_draw_text(ubuntu, al_map_rgb(205, 205, 205), (larg/2), 50, ALLEGRO_ALIGN_CENTRE, "SELECT YOUR FIGHTER");
         al_flip_display();
-        al_rest(0.05);
+        al_rest(0.02);
         al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2), 50, ALLEGRO_ALIGN_CENTRE, "SELECT YOUR FIGHTER");
         al_flip_display();
         FPSLimit();
@@ -502,3 +501,190 @@ void digite_ip(char ip[12]){
     printf("\n%s\n", ip);
     ret_conec = connectToServer(ip);
 }
+int select_map(){
+    al_draw_bitmap(hscs,0,0,0);
+    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+    al_flip_display();
+     char digito[2];
+     int final;
+     digito[1]= '\0'; 
+     while (1){
+        ALLEGRO_EVENT evento;
+        ALLEGRO_TIMEOUT timeout;
+        al_init_timeout(&timeout, 0.05);
+ 
+        int tem_eventos = al_wait_for_event_until(eventsQueue, &evento, &timeout);
+        
+        if (tem_eventos && evento.type == ALLEGRO_EVENT_KEY_DOWN){
+            switch(evento.keyboard.keycode){
+                    case ALLEGRO_KEY_0:
+                    digito[0]='0';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_1:
+                    digito[0]='1';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;            
+                    case ALLEGRO_KEY_2:
+                    digito[0]='2';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;        
+                    case ALLEGRO_KEY_3:
+                    digito[0]='3';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_4:
+                    digito[0]='4';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_5:
+                    digito[0]='5';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_6:
+                    digito[0]='6';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+
+                    case ALLEGRO_KEY_7:
+                    digito[0]='7';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_8:
+                    digito[0]='8';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_9:
+                    digito[0]='9';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_0:
+                    digito[0]='0';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_1:
+                    digito[0]='1';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_2:
+                    digito[0]='2';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_3:
+                    digito[0]='3';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_4:
+                    digito[0]='4';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_5:
+                    digito[0]='5';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_6:
+                    digito[0]='6';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_7:
+                    digito[0]='7';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_8:
+                    digito[0]='8';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_PAD_9:
+                    digito[0]='9';
+                    al_draw_bitmap(hscs,0,0,0);
+                    al_draw_text(start, al_map_rgb(255, 255, 255), larg/2-40, 70, ALLEGRO_ALIGN_CENTRE, "DIGITE UM NUMERO ALEATORIO");
+                    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, "_");
+                    al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, (alt/2)+2, ALLEGRO_ALIGN_CENTRE, digito);
+                    al_flip_display();
+                    break;
+                    case ALLEGRO_KEY_ENTER:
+                    final = digito[0]-'0';
+                    printf("%d",final );
+                    return final;     
+                    break;
+            }
+        }    
+    }
+}        

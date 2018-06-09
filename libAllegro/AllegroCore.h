@@ -25,6 +25,21 @@ ALLEGRO_FONT *ubuntu;
 ALLEGRO_FONT *start;
 ALLEGRO_BITMAP *objects;
 ALLEGRO_BITMAP *hscs;
+ALLEGRO_FONT *telaip;
+//personagens
+ALLEGRO_BITMAP *actor1;
+ALLEGRO_BITMAP *actor2;
+ALLEGRO_BITMAP *actor3;
+ALLEGRO_BITMAP *actor4;
+ALLEGRO_BITMAP *actor5;
+ALLEGRO_BITMAP *actor6;
+//personagens selecionados
+ALLEGRO_BITMAP *actor1_select;
+ALLEGRO_BITMAP *actor2_select;
+ALLEGRO_BITMAP *actor3_select;
+ALLEGRO_BITMAP *actor4_select;
+ALLEGRO_BITMAP *actor5_select;
+ALLEGRO_BITMAP *actor6_select;
 
 //Funções Centrais da Allegro
 bool coreInit();

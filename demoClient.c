@@ -148,15 +148,16 @@ bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
 }
 int main(){
     int x_close=9;
+    int id_local;
     coreInit();
     windowInit(larg, alt, "PUNCH KILL");
     inputInit();
     fontInit();
     loadGraphics();
-    /*
+    
     al_draw_bitmap(hscs, 0, 0, 0);
     al_draw_text(ubuntu, al_map_rgb(255, 255, 255), (larg/2)-40, 70, ALLEGRO_ALIGN_CENTRE, "PUNCH KILL");
-    al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
+    al_draw_text(start, al_map_rgb(255, 255, 0), (larg/2)-40, 220, ALLEGRO_ALIGN_CENTRE, "Start Game");
     al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 420, ALLEGRO_ALIGN_CENTRE, "Credits");
     al_draw_text(start, al_map_rgb(255, 255, 255), (larg/2)-40, 620, ALLEGRO_ALIGN_CENTRE, "Quit Game");
     al_flip_display();
@@ -165,33 +166,10 @@ int main(){
         return 0;
     }
     else if(x_close==1){
-        
-    }
-    else if(x_close==2){
-        //creditos
-        int x=0;
-        while(x<720){// (tamanho da imagem mais 720 ) X 1120 (ultima parte eh fundo preto)
-          imagem = al_load_bitmap("fundocreditos.jpg");
-          al_draw_bitmap(imagem, x , 0, 0);
-          al_flip_display();
-          al_rest(0.1);
-          x+=10;
-        }
-        if()//se chegar no fim da imagem reseta
-        }
-        //colocar o press esc to exit
-        else if(x_close==3){
-            return 0;
-        }
-    }
-    else if(x_close==3){
-        return 0;
-    }*/
-
-    char ip[12]={"__________"};
-    //conexão com o servidor
-    int ret_conec, id_local, ind;
-    do{
+        char ip[12]={"__________"};
+        //conexão com o servidor
+        int ret_conec, ind;
+        do{
         digite_ip(ip);
         ret_conec = connectToServer(ip);
         if(ret_conec==SERVER_UP){
@@ -207,7 +185,32 @@ int main(){
             }
         }
     }while(ret_conec!=SERVER_UP);
-    printf("\n%i\n", ret_conec);
+        printf("\n%i\n", ret_conec);
+        select_player();
+        select_map();
+    }
+    else if(x_close==2){
+       /* //creditos
+        int x=0;
+        while(x<720){// (tamanho da imagem mais 720 ) X 1120 (ultima parte eh fundo preto)
+          imagem = al_load_bitmap("fundocreditos.jpg");
+          al_draw_bitmap(imagem, x , 0, 0);
+          al_flip_display();
+          al_rest(0.1);
+          x+=10;
+        }
+        if()//se chegar no fim da imagem reseta
+        }
+        //colocar o press esc to exit
+        else if(x_close==3){
+            return 0;
+        }*/
+    }
+    else if(x_close==3){
+        return 0;
+    }
+
+
     //espera o servidor dar o sinal que a sala foi fechada
     char status_send, status_recb;
     int num_jogadores;

@@ -1,21 +1,9 @@
 #include "libSocket/server.h"
 #include "libAllegro/AllegroCore.h"
+#include <math.h>
 
 #define max 6
-#define tam 2240
-typedef struct{
-    int life;
-    int x;
-    int y;
-    char hori;
-    char ataque;
-}person;
-void sort_posi(int *vetor){
-    int a;
-    for(a=0; a<6;a++){
-        vetor[a]=rand()%(tam-64);
-    }
-}
+
 void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
     int ind, distx, disty;
     if(jogadores[id_ana].hori =='w'){
@@ -23,17 +11,21 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x);
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if(((distx >-32)&&(distx<32))&&(disty<64)){
+               if(distx < 0){
+                   distx *=(-1);
+               }
+               if(disty < 0){
+                   disty *=(-1);
+               }
+               if((distx==0)&&(disty<=64)&&(jogadores[id_ana].y > jogadores[ind].y)){
                    jogadores[ind].life--;
                    if(jogadores[ind].y>64){
                        jogadores[ind].y -= 64;
                    }else{
                        jogadores[ind].y = 0;
                    }
-                   
                    if(jogadores[ind].y <32){
                        jogadores[ind].life = 0;
-                       printf("morte nos espinhos\n");
                    }
                }
            } 
@@ -43,17 +35,23 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x);
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if(((distx >-32)&&(distx<32))&&(disty> -64)){
+               if(distx < 0){
+                   distx *=(-1);
+               }
+               if(disty < 0){
+                   disty *=(-1);
+               }
+               if((distx==0)&&(disty<=96)&&(jogadores[id_ana].y < jogadores[ind].y)){
                    jogadores[ind].life--;
-                   if(jogadores[ind].y <(tam-96)){
+                   if(jogadores[ind].y <(alt-96)){
                        jogadores[ind].y += 64;
-                   }else{
-                       jogadores[ind].y  = (tam -32);
+                   }
+                   else{
+                       jogadores[ind].y  = (alt -32);
                    }
                       
-                   if(jogadores[ind].y >(tam -32)){
+                   if(jogadores[ind].y >(alt -32)){
                        jogadores[ind].life = 0;
-                       printf("morte nos espinhos\n");
                    }
                }
            } 
@@ -61,30 +59,41 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
     }else if(jogadores[id_ana].hori =='d'){
         for(ind=0;ind<num_jogadores;ind++){
            if(ind!=id_ana){
-               distx = (jogadores[id_ana].x -jogadores[ind].x);
+               distx = (jogadores[ind].x -jogadores[id_ana].x);
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if(((disty >-32)&&(disty<32))&&(distx> 64)){
+               if(distx < 0){
+                   distx *=(-1);
+               }
+               if(disty < 0){
+                   disty *=(-1);
+               }
+               if((disty==0)&&(distx <= 96)&&(jogadores[id_ana].x < jogadores[ind].x)){
                    jogadores[ind].life--;
-                   if(jogadores[ind].x <(tam - 96)){
+                   if(jogadores[ind].x <(larg - 96)){
                        jogadores[ind].x +=64;
                    }else{
-                       jogadores[ind].x = (tam - 32);
+                       jogadores[ind].x = (larg - 32);
                    }
                    
-                   if(jogadores[ind].x >(tam -32)){
+                   if(jogadores[ind].x >(larg -32)){
                        jogadores[ind].life = 0;
-                       printf("morte nos espinhos\n");
                    }
                    
                }
            } 
         }
-    }else{
+    }else if(jogadores[id_ana].hori =='a'){
         for(ind=0;ind<num_jogadores;ind++){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x);
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if(((disty >-32)&&(disty<32))&&(distx>-64)){
+               if(distx < 0){
+                   distx *=(-1);
+               }
+               if(disty < 0){
+                   disty *=(-1);
+               }
+               if((disty==0)&&(distx <= 96)&&(jogadores[id_ana].x > jogadores[ind].x)){
                    jogadores[ind].life--;
                    if(jogadores[ind].x >64){
                        jogadores[ind].x -=64;
@@ -94,7 +103,6 @@ void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
                    
                    if((jogadores[ind].x <32)){
                        jogadores[ind].life = 0;
-                       printf("morte nos espinhos\n");
                    }
                }
            } 
@@ -109,15 +117,30 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x );
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if((distx <= 32)&&(disty<=32)){
+               if(distx < 0){
+                   distx *=(-1);
+               }
+               if(disty < 0){
+                   disty *=(-1);
+               }
+               if((distx == 0)&&(jogadores[id_ana].y == (jogadores[ind].y+32))){
+                   jogadores[ind].life--;
+                   jogadores[ind].y -= 32;
+                   jogadores[ind].x += 32;
+               }
+               else if((jogadores[id_ana].x == (jogadores[ind].x-32))&&(jogadores[id_ana].y == (jogadores[ind].y+32))){
+                   jogadores[ind].life--;
+                   jogadores[ind].y -= 32;
+                   jogadores[ind].x += 32;
+               }
+               else if((jogadores[id_ana].x == (jogadores[ind].x-32))&&(jogadores[id_ana].y == jogadores[ind].y)){
                    jogadores[ind].life--;
                    jogadores[ind].y -= 32;
                    jogadores[ind].x += 32;
                }
                
-               if((jogadores[ind].x >(tam - 64))||(jogadores[ind].y <32)){
-                       jogadores[ind].life = 0;
-                       printf("morte nos espinhos\n");
+               if((jogadores[ind].x >(larg - 32))||(jogadores[ind].y <32)){
+                    jogadores[ind].life = 0;
                }
            } 
         }
@@ -126,15 +149,30 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x);
                disty = (jogadores[ind].y -jogadores[id_ana].y);
-               if((distx <=32)&&(disty<=32)){
+               if(distx < 0){
+                   distx *=(-1);
+               }
+               if(disty < 0){
+                   disty *=(-1);
+               }
+               if((distx == 0)&&(jogadores[id_ana].y == (jogadores[ind].y-32))){
+                   jogadores[ind].life--;
+                   jogadores[ind].y += 32;
+                   jogadores[ind].x -= 32;
+               }
+               else if((jogadores[id_ana].x == (jogadores[ind].x+32))&&(jogadores[id_ana].y == (jogadores[ind].y-32))){
+                   jogadores[ind].life--;
+                   jogadores[ind].y += 32;
+                   jogadores[ind].x -= 32;
+               }
+               else if((jogadores[id_ana].x == (jogadores[ind].x+32))&&(jogadores[id_ana].y == jogadores[ind].y)){
                    jogadores[ind].life--;
                    jogadores[ind].y += 32;
                    jogadores[ind].x -= 32;
                }
                
-               if((jogadores[ind].x <32)||(jogadores[ind].y >(tam -64))){
-                       jogadores[ind].life = 0;
-                       printf("morte nos espinhos\n");
+               if((jogadores[ind].x <32)||(jogadores[ind].y >(alt -32))){
+                    jogadores[ind].life = 0;
                }
            } 
         }
@@ -143,32 +181,62 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x);
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if((disty <=32)&&(distx<=32)){
+               if(distx < 0){
+                   distx *=(-1);
+               }
+               if(disty < 0){
+                   disty *=(-1);
+               }
+
+               if((disty == 0)&&(jogadores[id_ana].x == (jogadores[ind].x-32))){
+                   jogadores[ind].life--;
+                   jogadores[ind].y += 32;
+                   jogadores[ind].x += 32;
+               }
+               else if((jogadores[id_ana].x == (jogadores[ind].x-32))&&(jogadores[id_ana].y == (jogadores[ind].y-32))){
+                   jogadores[ind].life--;
+                   jogadores[ind].y += 32;
+                   jogadores[ind].x += 32;
+               }
+               else if((jogadores[id_ana].x == jogadores[ind].x)&&(jogadores[id_ana].y == (jogadores[ind].y-32))){
                    jogadores[ind].life--;
                    jogadores[ind].y += 32;
                    jogadores[ind].x += 32;
                }
                
-               if((jogadores[ind].x >(tam -64))||(jogadores[ind].y >(tam -64))){
-                       jogadores[ind].life = 0;
-                       printf("morte nos espinhos\n");
+               if((jogadores[ind].x >(larg -32))||(jogadores[ind].y >(alt -32))){
+                    jogadores[ind].life = 0;
                }
            } 
         }
-    }else{
+    }else if(jogadores[id_ana].hori =='a'){
         for(ind=0;ind<num_jogadores;ind++){
            if(ind!=id_ana){
                distx = (jogadores[id_ana].x -jogadores[ind].x);
                disty = (jogadores[id_ana].y -jogadores[ind].y);
-               if((disty<=32)&&(distx<=32)){
+               if(distx < 0){
+                   distx *=(-1);
+               }
+               if(disty < 0){
+                   disty *=(-1);
+               }
+               if((disty == 0)&&(jogadores[id_ana].x == (jogadores[ind].x+32))){
                    jogadores[ind].life--;
                    jogadores[ind].y -= 32;
                    jogadores[ind].x -= 32;
                }
-               
+               else if((jogadores[id_ana].x == (jogadores[ind].x+32))&&(jogadores[id_ana].y == (jogadores[ind].y+32))){
+                   jogadores[ind].life--;
+                   jogadores[ind].y -= 32;
+                   jogadores[ind].x -= 32;
+               }
+               else if((jogadores[id_ana].x == jogadores[ind].x)&&(jogadores[id_ana].y == (jogadores[ind].y+32))){
+                   jogadores[ind].life--;
+                   jogadores[ind].y -= 32;
+                   jogadores[ind].x -= 32;
+               }               
                if((jogadores[ind].x <32)||(jogadores[ind].y <32)){
-                       jogadores[ind].life = 0;
-                       printf("morte nos espinhos\n");
+                    jogadores[ind].life = 0;
                }
            } 
         }
@@ -177,129 +245,146 @@ void veri_hits_esp(person jogadores[max], int id_ana, int num_jogadores){
 
 int main(){
     serverInit(max);
-    //exibe configurações de rede para facilitar a conexão
-    printf("-------------------------------[CONFIGURACAO DE REDE]-------------------------------\n");
-    system("ifconfig");
-    printf("------------------------------------------------------------------------------------\n");
+    while(true){
+        //exibe configurações de rede para facilitar a conexão
+        printf("-------------------------------[CONFIGURACAO DE REDE]-------------------------------\n");
+        system("ifconfig");
+        printf("------------------------------------------------------------------------------------\n");
 
-    //essa parte vei esperar a sala ter condições minima de iniciar a partida
-    int condi_ini = 0, ind_jog=0, temp;
-    double temp_sem_conec=0;
-    int players[max]={0};
-    int num_jogadores;
-    while(condi_ini==false){
-        if(ind_jog<max){
-            temp=acceptConnection();
-            if(temp!=NO_CONNECTION){
-                players[ind_jog] = temp;
-                sendMsgToClient(&ind_jog,sizeof(int),players[ind_jog]);
-                ind_jog++;
-                temp_sem_conec = 0.0;
-            }else{
-                al_rest(0.1);
-                temp_sem_conec +=0.1;
+        //essa parte vei esperar a sala ter condições minima de iniciar a partida
+        int condi_ini = 0, ind_jog=0, temp;
+        double temp_sem_conec=0;
+        int players[max]={0};
+        int num_jogadores, jog_esp;
+        int skins[max];
+        printf("Quantos jogadores deseja esperar? ");
+        scanf("%i", &jog_esp);
+        printf("Server running...\n");
+        while(condi_ini==false){
+            if(ind_jog<max){
+                temp=acceptConnection();
+                if(temp!=NO_CONNECTION){
+                    players[ind_jog] = temp;
+                    sendMsgToClient(&ind_jog,sizeof(int),players[ind_jog]);
+                    ind_jog++;
+                    temp_sem_conec = 0.0;
+                }else{
+                    al_rest(0.1);
+                    temp_sem_conec +=0.1;
+                }
             }
+            if((ind_jog ==(max-1))||((temp_sem_conec>10.0))&&(ind_jog>=jog_esp)){
+                condi_ini =true;
+            } 
         }
-        printf("%lf - %i\n", temp_sem_conec, players[ind_jog]);
-        if((ind_jog ==(max-1))||((temp_sem_conec >=10.0)&&(ind_jog >1))){
-            condi_ini =1;
-        } 
-    }
-    num_jogadores = ind_jog;
-    printf("passou aqui1\n");
-    //informa a todos os clientes qual foi a condição de inicio
-    char status_send, status_recb;
-    if(ind_jog <5){
-        //nesse caso o servidor fechou a sala e iniciou a partid com as codições minimas(pelo menos 2 jogadores)
-        status_send = 'm';
-        broadcast(&status_send, sizeof(char));
-        broadcast(&num_jogadores, sizeof(int));
-    }else{
-        //nesse caso o servidor fechou a sala e iniciou a partida com as condições otimas(6 jogadores)
-        status_send = 'n';
-        broadcast(&status_send, sizeof(char));
-    }
-    printf("passou aqui2\n");
-    //atribuição e distribuição de valores iniciais para os jogadores que se conetaram
-    int posicoes[12];
-    int ind_id, ind_sort = 0;
-    sort_posi(posicoes);
-    person jogadores[max];
-    for(ind_id=0;ind_id<num_jogadores;ind_id++){
-        jogadores[ind_id].life = 5;
-        jogadores[ind_id].hori = 'w';
-        jogadores[ind_id].ataque= '0';
-        jogadores[ind_id].x = posicoes[ind_sort];
-        ind_sort++;
-        jogadores[ind_id].y = posicoes[ind_sort];
-        ind_sort++;
-    }
-    printf("passou aqui4\n");
-    broadcast(jogadores, sizeof(person)*num_jogadores);
-    //espera o timer de 5 segundos no client para iniciar a partida
-    al_init();
-    al_rest(5);
-
-    //laço de uma partida
-    bool partida = true, valido;
-    int jog_vivos, ind_vivo;
-    while(partida == true){
-        printf("entrou\n");
-        rejectConnection();
-        startTimer();
-
-        //-------(CODIGOS)--------
-
-        //recebe as modificações do jogador
-        for(ind_id=0; ind_id<ind_jog;ind_id++){
-            recvMsgFromClient(&jogadores[ind_id], players[ind_id], WAIT_FOR_IT);
+        num_jogadores = ind_jog;
+        //coleta do numero do mapa e da skin
+        int ind_id,map_number = 0, map_temp = 0;
+        for(ind_id = 0; ind_id < num_jogadores; ind_id++){
+            recvMsgFromClient(&skins[ind_id], players[ind_id], WAIT_FOR_IT);
+            recvMsgFromClient(&map_temp, players[ind_id], WAIT_FOR_IT);
+            map_number +=map_temp;
         }
-
-        //verificação de hits
-        for(ind_id=0;ind_id<num_jogadores;ind_id++){
-            if(jogadores[ind_id].ataque == '1'){
-                veri_hits_lanca(jogadores,ind_id,num_jogadores);
-            }else if(jogadores[ind_id].ataque =='2'){
-                veri_hits_esp(jogadores,ind_id,num_jogadores);
-            }
+    
+        map_number %= 3;
+        broadcast(&map_number,sizeof(int));
+        //informa a todos os clientes qual foi a condição de inicio
+        char status_send, status_recb;
+        if(ind_jog <5){
+            //nesse caso o servidor fechou a sala e iniciou a partid com as codições minimas(pelo menos 2 jogadores)
+            status_send = 'm';
+            broadcast(&status_send, sizeof(char));
+            broadcast(&num_jogadores, sizeof(int));
+        }else{
+            //nesse caso o servidor fechou a sala e iniciou a partida com as condições otimas(6 jogadores)
+            status_send = 'n';
+            broadcast(&status_send, sizeof(char));
         }
         
-        broadcast(jogadores, sizeof(person)*ind_jog);
-
-        // verificação de mortes
+        //atribuição e distribuição de valores iniciais para os jogadores que se conetaram
+        int posicoes[12]={160,160,768,160,160,512,768,512,160,384,512,384};
+        int ind_sort = 0;
+        person jogadores[max];
         for(ind_id=0;ind_id<num_jogadores;ind_id++){
-            if(jogadores[ind_id].life == 0){
-                disconnectClient(players[ind_id]);
+            jogadores[ind_id].life = 5;
+            jogadores[ind_id].hori = 'w';
+            jogadores[ind_id].ataque= '0';
+            jogadores[ind_id].pe = 0;
+            jogadores[ind_id].skin = skins[ind_id];
+            jogadores[ind_id].x = posicoes[ind_sort];
+            ind_sort++;
+            jogadores[ind_id].y = posicoes[ind_sort];
+            ind_sort++;
+        }
+
+        broadcast(jogadores, sizeof(person)*num_jogadores);
+        //espera o timer de 4 segundos no client para iniciar a partida
+        al_init();
+        al_rest(4);
+
+        //laço de uma partida
+        bool partida = true, valido;
+        int jog_vivos, ind_vivo;
+        while(partida == true){
+            rejectConnection();
+            startTimer();
+
+            //recebe as modificações do jogador
+            for(ind_id=0; ind_id<ind_jog;ind_id++){
+                recvMsgFromClient(&jogadores[ind_id], players[ind_id], WAIT_FOR_IT);
             }
-        }
 
-        for(ind_id=0;ind_id<num_jogadores;ind_id++){
-            printf("%i - %c - %c - %i - %i \n",jogadores[ind_id].life,jogadores[ind_id].hori,jogadores[ind_id].ataque,jogadores[ind_id].x, jogadores[ind_id].y);  
-        }
-
-        //verifica se ainda tem jogadores na partidores e se alguem já ganhou a partida
-        jog_vivos = 0;
-        for(ind_id=0;ind_id<num_jogadores;ind_id++){
-            if(jogadores[ind_id].life > 0){
-                jog_vivos++;
-                ind_vivo = ind_id;
+            //verificação de hits
+            for(ind_id=0;ind_id<num_jogadores;ind_id++){
+                if(jogadores[ind_id].ataque == 'j'){
+                    veri_hits_lanca(jogadores,ind_id,num_jogadores);
+                }else if(jogadores[ind_id].ataque =='k'){
+                    veri_hits_esp(jogadores,ind_id,num_jogadores);
+                }
             }
+
+            //verificação de se algum jogador foi para a berada
+            for(ind_id=0; ind_id<num_jogadores;ind_id++){
+                if(jogadores[ind_id].x <=32){
+                    jogadores[ind_id].life = 0;
+                }else if(jogadores[ind_id].x >=(larg-32)){
+                    jogadores[ind_id].life = 0;
+                }if(jogadores[ind_id].y <=32){
+                    jogadores[ind_id].life = 0;
+                }if(jogadores[ind_id].y >=(alt-32)){
+                    jogadores[ind_id].life = 0;
+                }
+            }
+            //envio das atualização para todos os jogadores
+            broadcast(jogadores, sizeof(person)*ind_jog);
+            //verifica se ainda tem jogadores vivo na partida
+            jog_vivos = 0;
+            for(ind_id=0;ind_id<num_jogadores;ind_id++){
+                if(jogadores[ind_id].life > 0){
+                    jog_vivos++;
+                    ind_vivo = ind_id;
+                }
+            }
+            
+            //manda aos clientes se vai ter proxima rodada
+            if(jog_vivos==1){
+                status_send = '1';
+                broadcast(&status_send, sizeof(char));
+                partida = false;
+            }else{
+                status_send = '2';
+                broadcast(&status_send, sizeof(char));
+            }
+
+            FPSLimit();
+
         }
-
-        //manda aos clientes se vai ter proxima rodada e se não tiver diz quem ganhou
-        if(jog_vivos==1){
-            status_send = '1';
-            broadcast(&status_send, sizeof(char));
-            sendMsgToClient(&ind_vivo, sizeof(int),players[ind_vivo]);
-            partida = false;
-        }else{
-            status_send = '2';
-            broadcast(&status_send, sizeof(char));
+        //desconecta os jogadores ao final da partida
+        for(ind_id=0;ind_id<num_jogadores;ind_id++){
+            disconnectClient(players[ind_id]);
         }
-
-        FPSLimit();
-
+        al_rest(10.0);
+        serverReset();
     }
-    serverReset();
     return 0;
 }

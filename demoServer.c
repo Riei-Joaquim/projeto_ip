@@ -2,7 +2,7 @@
 #include "libAllegro/AllegroCore.h"
 #include <math.h>
 
-#define max 6
+#define max 4
 
 void veri_hits_lanca(person jogadores[max], int id_ana, int num_jogadores){
     int ind, distx, disty;
@@ -259,6 +259,13 @@ int main(){
         int skins[max];
         printf("Quantos jogadores deseja esperar? ");
         scanf("%i", &jog_esp);
+        if(jog_esp<2){
+            printf("A sala sera fechada com condicoes minimas(2 jogadores)\n");
+            jog_esp = 2;
+        }else if(jog_esp>4){
+            printf("A sala sera fechada com condicoes maximas(4 jogadores)\n");
+            jog_esp = 4;
+        }
         printf("Server running...\n");
         while(condi_ini==false){
             if(ind_jog<max){

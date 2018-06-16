@@ -119,7 +119,11 @@ int main(){
 
         //tela de espera
         al_draw_bitmap(hscs, 0, 0, 0);
-        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 300, ALLEGRO_ALIGN_CENTRE, "aguardando mais jogadores");
+        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 200, ALLEGRO_ALIGN_CENTRE,"Aguardando mais jogadores");
+        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 300, ALLEGRO_ALIGN_CENTRE,"Use as teclas:");
+        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 400, ALLEGRO_ALIGN_CENTRE,"W, A, S, D para se mover");
+        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 500, ALLEGRO_ALIGN_CENTRE,"J e K para atacar");
+        
         al_flip_display();
 
         //envio da skin local
@@ -158,10 +162,7 @@ int main(){
 
         //recebe as posições iniciais dos jogadores
         al_draw_bitmap(hscs, 0, 0, 0);
-        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 200, ALLEGRO_ALIGN_CENTRE,"Aguardando outros jogadores");
-        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 300, ALLEGRO_ALIGN_CENTRE,"Use as teclas:");
-        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 400, ALLEGRO_ALIGN_CENTRE,"W, A, S, D para se mover");
-        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 500, ALLEGRO_ALIGN_CENTRE,"J e K para atacar");
+        al_draw_text(telaip, al_map_rgb(255, 255, 255), (larg/2)-40, 300, ALLEGRO_ALIGN_CENTRE,"Aguardando os outros jogadores");
         al_flip_display();
         recvMsgFromServer(jogadores,WAIT_FOR_IT);
 

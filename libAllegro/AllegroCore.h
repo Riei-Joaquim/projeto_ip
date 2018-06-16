@@ -13,7 +13,7 @@
 #include <string.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
-#define max 6
+#define max 4
 #define FPS 60
 #define WIDTH 1120
 #define HEIGHT 720

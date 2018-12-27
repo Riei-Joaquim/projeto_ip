@@ -174,4 +174,11 @@ void imprimi_mapa(int num_map);
 void imprimi_status(person jogador);
 //função de audio
 void setAudio(char k[]); 
+
+int digitemenu();
+void digite_ip(char ip[12]);
+int select_player();
+int select_map();
+void game_begin(int map_number, person jogador, int l_inic, int c_inic);
+
 #endif

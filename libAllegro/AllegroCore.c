@@ -38,7 +38,7 @@ bool windowInit(int W, int H, char title[]){
     //window and event queue creation
     main_window = al_create_display(W, H);
     if (!main_window){
-        fprintf,(stderr, "Falha ao criar janela.\n");
+        fprintf(stderr, "Falha ao criar janela.\n");
         return false;
     }
     al_set_window_title(main_window, title);
@@ -225,7 +225,6 @@ int digitemenu(){
         
         if (tem_eventos && evento.type == ALLEGRO_EVENT_DISPLAY_CLOSE){
             allegroEnd();
-            printf("Janela fechada\n");
             return 0;
         }
         if(tem_eventos && evento.type == ALLEGRO_EVENT_KEY_DOWN){
@@ -266,11 +265,9 @@ int digitemenu(){
             else if(evento.keyboard.keycode == ALLEGRO_KEY_ENTER){
                 al_play_sample(cursor, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
                 if(posicao==0){
-                    printf("O JOGO COMECOU\n");
                     return 1;
                 }
                 else if(posicao==1){
-                printf("CREDITOS\n");
 
                 al_draw_bitmap(hscs,0,0,0);
                 al_draw_text(ubuntu, al_map_rgb(255, 255, 255), larg / 2,(20),ALLEGRO_ALIGN_CENTRE,"Creditos");
@@ -302,7 +299,6 @@ int digitemenu(){
                 return bu;  
                 }
                 else if(posicao==2){
-                    printf("GAME QUITADO\n");
                     return 3;
                 }
             }
@@ -319,7 +315,8 @@ int select_player(){
     al_draw_bitmap(actor5,343,458,0);
     al_draw_bitmap(actor6,599,458,0);
     al_flip_display();
-    int mat_posicao[2][3] = {1,2,3,4,5,6};
+    int mat_posicao[2][3] = {{1,2,3},
+                             {4,5,6}};
     int x = 0, y = 0;
     int key=1;
     int n = 1;

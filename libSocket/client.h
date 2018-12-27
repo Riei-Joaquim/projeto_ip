@@ -3,7 +3,7 @@
 
 #define NO_KEY_PRESSED '\0'
 
-#define NO_MESSAGE -1
+#define NO_MESSAGE -5
 #define SERVER_DISCONNECTED -2
 #define WAIT_FOR_IT 1
 #define DONT_WAIT 2

@@ -13,7 +13,6 @@ bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
                 }
             }
         }
-        return true;
     }else if(mov == 's'){
         for(ind=0;ind<num_jogadores;ind++){
             if(ind!=meu_id){
@@ -22,7 +21,6 @@ bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
                 }
             }
         }
-        return true;
     }else if(mov == 'a'){
         for(ind=0;ind<num_jogadores;ind++){
             if(ind!=meu_id){
@@ -31,7 +29,6 @@ bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
                 }
             }
         }
-        return true;
     }else if(mov == 'd'){
         for(ind=0;ind<num_jogadores;ind++){
             if(ind!=meu_id){
@@ -40,8 +37,8 @@ bool mov_valid(char mov, person jogadores[max], int num_jogadores, int meu_id){
                 }
             }
         }
-        return true;
     }
+    return true;
 }
 int main(){
     int skin_player;
@@ -136,7 +133,7 @@ int main(){
         recvMsgFromServer(&map_number, WAIT_FOR_IT);
 
         //espera o servidor dar o sinal que a sala foi fechada
-        char status_send, status_recb;
+        char status_recb;
         int num_jogadores;
         char mensg1[] = {"(a jogadores)"};
         char mensg2[] = {"Partida iniciada com sala cheia"};
@@ -205,7 +202,7 @@ int main(){
         // laço da partida
         bool partida = true;
         char caracter; 
-        int num_visi, ind_vivo;
+        int ind_vivo;
         char mens_win[13]={"O jogador a"};
         int contfps=0;
         while(partida ==true){
@@ -324,6 +321,7 @@ int main(){
         allegroEnd(); 
     }
     else if(x_close==3){
+        allegroEnd();
         return 0;
     }
     return 0;
